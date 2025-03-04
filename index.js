@@ -84,35 +84,43 @@ function solicitarNomeDoArquivo() {
 }
 
 // Função principal para interação com o usuário
-async function iniciar() {
+async function iniciar(res) {
     setModel();
 
     rl.question('Faça sua pergunta: ', async (pergunta) => {
         if(pergunta.includes('Mostrar segredos')){
-
-        }
-        const resposta = await fazerPergunta(pergunta);
-        console.log(`Resposta: ${resposta}`);
+            solicitarNomeDoArquivo();
+        }else{
+   const resposta = await fazerPergunta(pergunta);
         // Salvar a interação
         salvarInteracao(pergunta, resposta);
-
+        console.log(`Resposta: ${resposta}`);
+        res.json(resposta);
         // Perguntar se o usuário deseja continuar
-        // rl.question('Deseja fazer outra pergunta? (s/n): ', (continuar) => {
-        //     if (continuar.toLowerCase() === 's') {
-        //         iniciar(); // Reinicia a interação
-        //     } else {
-        //         console.log('Obrigado por usar o sistema!');
-        //         rl.close(); // Fecha a interface
-        //     }
-        // });
+        rl.question('Deseja fazer outra pergunta? (s/n): ', (continuar) => {
+            if (continuar.toLowerCase() === 's') {
+                iniciar(); // Reinicia a interação
+            } else {
+                console.log('Obrigado por usar o sistema!');
+                rl.close(); // Fecha a interface
+            }
+        });
+
+        }
+     
     });
 }
 
 // Iniciar a aplicação
-iniciar();
 
-// Se você quiser usar o Express para uma API, descomente as linhas abaixo
-// const port = parseInt(process.env.PORT) || 3000;
-// app.listen(port, () => {
-//   console.log(`listening on port ${port}`);
-// });
+
+app.get('/api/data/dunamis', (req, res) => {
+iniciar(res);
+  })
+
+
+
+const port = parseInt(process.env.PORT) || 3000;
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});
