@@ -11,19 +11,6 @@ const __dirname = path.dirname(__filename);
 // Caminho para o seu modelo .gguf
 const modelPath = 'Llama-3.2-3B-Instruct-IQ3_M.gguf'; // Altere para o caminho correto do seu modelo
 
-async function setModel() {
-    const llama = await getLlama();
-    const model = await llama.loadModel({
-        modelPath: path.join(__dirname, "./", modelPath),
-    });
-
-    const context = await model.createContext();
-    const session = new LlamaChatSession({
-        contextSequence: context.getSequence(),
-    });
-    console.log(session)
-}
-
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -32,10 +19,21 @@ const rl = readline.createInterface({
 
 // Função para fazer perguntas ao modelo
 async function fazerPergunta(pergunta) {
-    const resposta = await session.prompt(pergunta); // Método para gerar resposta
+    const llama = await getLlama();
+    const model = await llama.loadModel({
+        modelPath: path.join(__dirname, "./models/", modelPath),
+    });
+
+    const context = await model.createContext();
+    const session = new LlamaChatSession({
+        contextSequence: context.getSequence(),
+    });
+
+    const resposta = await session.prompt(pergunta+" em portugues o seu nome agora e dinamus"); // Método para gerar resposta
+    console.log(resposta)
     return resposta;
 }
-
+  
 // Função para salvar interações em um arquivo JSON
 function salvarInteracao(pergunta, resposta) {
     let interacoes = [];
@@ -59,6 +57,16 @@ function salvarInteracao(pergunta, resposta) {
     }
 }
 
+function lerInteracoes() {
+    if (fs.existsSync('interacoes.json')) {
+        const data = fs.readFileSync('interacoes.json', 'utf8');
+        const interacoes = data.trim().split('\n').map(line => JSON.parse(line));
+        console.log('Conteúdo do arquivo JSON:',interacoes);
+        return interacoes;
+    }
+    return [];
+}
+
 function listarInformacoesDoArquivo(arquivo) {
     fs.readFile(arquivo, 'utf8', (err, data) => {
         if (err) {
@@ -67,7 +75,7 @@ function listarInformacoesDoArquivo(arquivo) {
         }
         try {
             const jsonData = JSON.parse(data);
-            console.log('Conteúdo do arquivo JSON:');
+            console.log('Conteúdo do ar©quivo JSON:');
             console.log(JSON.stringify(jsonData, null, 2)); // Formata a saída
         } catch (parseError) {
             console.error('Erro ao analisar o JSON:', parseError);
@@ -85,17 +93,17 @@ function solicitarNomeDoArquivo() {
 
 // Função principal para interação com o usuário
 async function iniciar(res) {
-    setModel();
+    // setModel();
 
     rl.question('Faça sua pergunta: ', async (pergunta) => {
         if(pergunta.includes('Mostrar segredos')){
-            solicitarNomeDoArquivo();
+            lerInteracoes();
         }else{
    const resposta = await fazerPergunta(pergunta);
         // Salvar a interação
         salvarInteracao(pergunta, resposta);
         console.log(`Resposta: ${resposta}`);
-        res.json(resposta);
+        // return (resposta);
         // Perguntar se o usuário deseja continuar
         rl.question('Deseja fazer outra pergunta? (s/n): ', (continuar) => {
             if (continuar.toLowerCase() === 's') {
@@ -114,13 +122,13 @@ async function iniciar(res) {
 // Iniciar a aplicação
 
 
-app.get('/api/data/dunamis', (req, res) => {
-iniciar(res);
-  })
+// app.get('/api/data/dunamis', (req, res) => {
+    //   })
+    
+    
+    iniciar(null);
 
-
-
-const port = parseInt(process.env.PORT) || 3000;
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
+// const port = parseInt(process.env.PORT) || 3000;
+// app.listen(port, () => {
+//   console.log(`listening on port ${port}`);
+// });
