@@ -84,7 +84,7 @@ function solicitarNomeDoArquivo() {
 }
 
 // Função principal para interação com o usuário
-async function iniciar() {
+async function iniciar(res) {
     setModel();
 
     rl.question('Faça sua pergunta: ', async (pergunta) => {
@@ -92,19 +92,19 @@ async function iniciar() {
             solicitarNomeDoArquivo();
         }else{
    const resposta = await fazerPergunta(pergunta);
-        console.log(`Resposta: ${resposta}`);
         // Salvar a interação
         salvarInteracao(pergunta, resposta);
-
+        console.log(`Resposta: ${resposta}`);
+        res.json(resposta);
         // Perguntar se o usuário deseja continuar
-        // rl.question('Deseja fazer outra pergunta? (s/n): ', (continuar) => {
-        //     if (continuar.toLowerCase() === 's') {
-        //         iniciar(); // Reinicia a interação
-        //     } else {
-        //         console.log('Obrigado por usar o sistema!');
-        //         rl.close(); // Fecha a interface
-        //     }
-        // });
+        rl.question('Deseja fazer outra pergunta? (s/n): ', (continuar) => {
+            if (continuar.toLowerCase() === 's') {
+                iniciar(); // Reinicia a interação
+            } else {
+                console.log('Obrigado por usar o sistema!');
+                rl.close(); // Fecha a interface
+            }
+        });
 
         }
      
@@ -115,7 +115,7 @@ async function iniciar() {
 
 
 app.get('/api/data/dunamis', (req, res) => {
-iniciar();
+iniciar(res);
   })
 
 
