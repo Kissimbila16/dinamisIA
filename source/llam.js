@@ -4,7 +4,7 @@ import fs from 'fs';
 
 // Função para carregar o modelo a partir do arquivo JSON
 function carregarModelo() {
-    const data = fs.readFileSync('modelo.json', 'utf8');
+    const data = fs.readFileSync('source/data.json', 'utf8');
     return JSON.parse(data).perguntas;
 }
 

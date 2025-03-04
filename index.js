@@ -112,10 +112,15 @@ async function iniciar() {
 }
 
 // Iniciar a aplicação
-iniciar();
 
-// Se você quiser usar o Express para uma API, descomente as linhas abaixo
-// const port = parseInt(process.env.PORT) || 3000;
-// app.listen(port, () => {
-//   console.log(`listening on port ${port}`);
-// });
+
+app.get('/api/data/dunamis', (req, res) => {
+iniciar();
+  })
+
+
+
+const port = parseInt(process.env.PORT) || 3000;
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});
