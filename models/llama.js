@@ -21,7 +21,7 @@ const rl = readline.createInterface({
 async function fazerPergunta(pergunta) {
     const llama = await getLlama();
     const model = await llama.loadModel({
-        modelPath: path.join(__dirname, "./models/", modelPath),
+        modelPath: path.join(__dirname, "./", modelPath),
         gpuLayers: 32, // Descarrega 32 camadas na GPU
         nCtx: 2048,    // Tamanho do contexto
         nBatch: 512,   // Tamanho do lote
@@ -97,8 +97,6 @@ function solicitarNomeDoArquivo() {
 
 // Função principal para interação com o usuário
 async function iniciar(res) {
-    // setModel();
-
     rl.question('Faça sua pergunta: ', async (pergunta) => {
         if(pergunta.includes('Mostrar segredos')){
             lerInteracoes();
@@ -122,18 +120,3 @@ async function iniciar(res) {
      
     });
 }
-
-// Iniciar a aplicação
-
-
-// app.get('/api/data/dunamis', (req, res) => {
-    iniciar(null);
-
-    //   })
-    
-    
-
-// const port = parseInt(process.env.PORT) || 3000;
-// app.listen(port, () => {
-//   console.log(`listening on port ${port}`);
-// });

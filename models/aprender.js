@@ -2,7 +2,7 @@ import { LlamaModel, LlamaContext }  from "node-llama-cpp";
 import path  from 'path';
 import fs  from 'fs';
 
-const modelPath = path.join(__dirname, "./models/seu_modelo_llama.gguf"); // Substitua pelo caminho correto
+const modelPath = path.join(__dirname, "./seu_modelo_llama.gguf"); // Substitua pelo caminho correto
 const model = new LlamaModel({ modelPath: modelPath });
 const context = new LlamaContext({ model });
 
