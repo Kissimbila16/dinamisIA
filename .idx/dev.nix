@@ -1,27 +1,38 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://developers.google.com/idx/guides/customize-idx-env
 { pkgs, ... }: {
-  # Which nixpkgs channel to use.
-  channel = "stable-23.11"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
-  packages = [
-    pkgs.nodejs_20
+  # Qual canal nixpkgs usar.
+  channel = "stable-23.11"; # ou "unstable"
+
+  # Use https://search.nixos.org/packages para encontrar pacotes
+  packages = with pkgs; [
+    git
+    git-lfs
+    nodejs_20
+    # Adicione aqui outros pacotes específicos do seu projeto
   ];
-  # Sets environment variables in the workspace
-  env = {};
+
+  # Define variáveis de ambiente no workspace
+  env = {
+    # Exemplo: NODE_ENV = "development";
+  };
+
   idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+    # Procure as extensões desejadas em https://open-vsx.org/ e use "editor.extensão"
     extensions = [
       "rangav.vscode-thunder-client"
+      # Adicione outras extensões que você precisa
     ];
+
     workspace = {
-      # Runs when a workspace is first created with this `dev.nix` file
+      # Executa quando um workspace é criado pela primeira vez com este arquivo `dev.nix`
       onCreate = {
         npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing";
+        # Adicione outros comandos de inicialização aqui
       };
-      # Runs when a workspace is (re)started
-      onStart= {
+
+      # Executa quando um workspace é (re)iniciado
+      onStart = {
         run-server = "npm run dev";
+        # Adicione outros comandos de inicialização aqui
       };
     };
   };

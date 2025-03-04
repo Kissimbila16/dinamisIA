@@ -89,9 +89,9 @@ async function iniciar() {
 
     rl.question('Faça sua pergunta: ', async (pergunta) => {
         if(pergunta.includes('Mostrar segredos')){
-
-        }
-        const resposta = await fazerPergunta(pergunta);
+            solicitarNomeDoArquivo();
+        }else{
+   const resposta = await fazerPergunta(pergunta);
         console.log(`Resposta: ${resposta}`);
         // Salvar a interação
         salvarInteracao(pergunta, resposta);
@@ -105,6 +105,9 @@ async function iniciar() {
         //         rl.close(); // Fecha a interface
         //     }
         // });
+
+        }
+     
     });
 }
 
